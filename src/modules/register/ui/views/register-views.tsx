@@ -1,3 +1,4 @@
+'use client';
 import { Navigation } from '@/components/common/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,12 +19,43 @@ import {
 	InstagramIcon,
 	LockIcon,
 	Mail,
+	Phone,
 	TwitterIcon,
 	User,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { registerSchema } from '../../schema/register-schema';
+
+interface Data {
+	fullName: string;
+	email: string;
+	phone: string;
+	password: string;
+	confirmPassword: string;
+}
 
 export const RegisterViews = () => {
+	const {
+		handleSubmit,
+		register,
+		reset,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			fullName: '',
+			email: '',
+			password: '',
+			confirmPassword: '',
+		},
+		resolver: yupResolver(registerSchema),
+	});
+
+	const onSubmit = (data: Data) => {
+		console.log(data);
+	};
+
 	return (
 		<div>
 			<Navigation />
@@ -40,15 +72,25 @@ export const RegisterViews = () => {
 					</CardHeader>
 
 					<CardContent>
-						<form>
+						<form onSubmit={handleSubmit(onSubmit)}>
 							<div>
 								<Label className="mb-2">Full Name</Label>
 								<InputGroup className="py-5">
-									<InputGroupInput type="text" placeholder="Jon Done" />
+									<InputGroupInput
+										{...register('fullName')}
+										type="text"
+										placeholder="Jon Done"
+									/>
 									<InputGroupAddon>
 										<User />
 									</InputGroupAddon>
 								</InputGroup>
+
+								{errors.fullName && (
+									<p className="text-red-500 text-sm mt-1 font-manrope">
+										{errors.fullName.message}
+									</p>
+								)}
 							</div>
 
 							<div className="mt-5">
@@ -56,32 +98,75 @@ export const RegisterViews = () => {
 								<InputGroup className="py-5">
 									<InputGroupInput
 										type="email"
+										{...register('email')}
 										placeholder="your@example.com"
 									/>
 									<InputGroupAddon>
 										<Mail />
 									</InputGroupAddon>
 								</InputGroup>
+								{errors.email && (
+									<p className="text-red-500 text-sm mt-1 font-manrope">
+										{errors.email.message}
+									</p>
+								)}
+							</div>
+
+							<div className="mt-5">
+								<Label className="mb-2">Phone Number</Label>
+								<InputGroup className="py-5">
+									<InputGroupInput
+										{...register('phone')}
+										type="text"
+										placeholder="01879212420"
+									/>
+									<InputGroupAddon>
+										<Phone />
+									</InputGroupAddon>
+								</InputGroup>
+								{errors.phone && (
+									<p className="text-red-500 text-sm mt-1 font-manrope">
+										{errors.phone.message}
+									</p>
+								)}
 							</div>
 
 							<div className="mt-5">
 								<Label className="mb-2">Password</Label>
 								<InputGroup className="py-5">
-									<InputGroupInput type="text" placeholder="************" />
+									<InputGroupInput
+										{...register('password')}
+										type="text"
+										placeholder="************"
+									/>
 									<InputGroupAddon>
 										<LockIcon />
 									</InputGroupAddon>
 								</InputGroup>
+								{errors.password && (
+									<p className="text-red-500 text-sm mt-1 font-manrope">
+										{errors.password.message}
+									</p>
+								)}
 							</div>
 
 							<div className="mt-5">
 								<Label className="mb-2">Confirm Password</Label>
 								<InputGroup className="py-5">
-									<InputGroupInput type="text" placeholder="************" />
+									<InputGroupInput
+										{...register('confirmPassword')}
+										type="text"
+										placeholder="************"
+									/>
 									<InputGroupAddon>
 										<LockIcon />
 									</InputGroupAddon>
 								</InputGroup>
+								{errors.confirmPassword && (
+									<p className="text-red-500 text-sm mt-1 font-manrope">
+										{errors.confirmPassword.message}
+									</p>
+								)}
 							</div>
 
 							<Button type="submit" className="mt-5 w-full rounded">
