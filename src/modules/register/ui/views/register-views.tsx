@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/input-group';
 import { Label } from '@/components/ui/label';
 import {
+    Eye,
+    EyeClosed,
 	FacebookIcon,
 	InstagramIcon,
 	LockIcon,
@@ -27,6 +29,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '../../schema/register-schema';
+import { useState } from 'react';
 
 interface Data {
 	fullName: string;
@@ -37,6 +40,8 @@ interface Data {
 }
 
 export const RegisterViews = () => {
+	const [passwordType, setPasswordType] = useState(false);
+	const [confirmPasswordType, setConfirmPasswordType] = useState(false);
 	const {
 		handleSubmit,
 		register,
@@ -135,12 +140,17 @@ export const RegisterViews = () => {
 								<Label className="mb-2">Password</Label>
 								<InputGroup className="py-5">
 									<InputGroupInput
-										{...register('password')}
-										type="text"
+										type={passwordType === false ? 'password' : 'text'}
 										placeholder="************"
 									/>
 									<InputGroupAddon>
 										<LockIcon />
+									</InputGroupAddon>
+									<InputGroupAddon
+										onClick={() => setPasswordType(!passwordType)}
+										align="inline-end"
+									>
+										{passwordType === false ? <Eye /> : <EyeClosed />}
 									</InputGroupAddon>
 								</InputGroup>
 								{errors.password && (
@@ -154,12 +164,19 @@ export const RegisterViews = () => {
 								<Label className="mb-2">Confirm Password</Label>
 								<InputGroup className="py-5">
 									<InputGroupInput
+										type={confirmPasswordType === false ? 'password' : 'text'}
 										{...register('confirmPassword')}
-										type="text"
+										
 										placeholder="************"
 									/>
 									<InputGroupAddon>
 										<LockIcon />
+									</InputGroupAddon>
+									<InputGroupAddon
+										onClick={() => setConfirmPasswordType(!confirmPasswordType)}
+										align="inline-end"
+									>
+										{confirmPasswordType === false ? <Eye /> : <EyeClosed />}
 									</InputGroupAddon>
 								</InputGroup>
 								{errors.confirmPassword && (
