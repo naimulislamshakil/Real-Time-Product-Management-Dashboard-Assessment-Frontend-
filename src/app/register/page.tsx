@@ -1,7 +1,8 @@
+import { RegisterViews } from '@/modules/register/ui/views/register-views';
 import React from 'react';
 
 const Page = () => {
-	return <div>Page</div>;
+	return <RegisterViews />;
 };
 
 export default Page;
