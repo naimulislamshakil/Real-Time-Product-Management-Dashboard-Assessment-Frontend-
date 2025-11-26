@@ -7,6 +7,16 @@ export interface RegisterRequest {
 	phone: string;
 }
 
+export interface User {
+	id: string;
+	fullName: string;
+	email: string;
+	password: string;
+	phone: string;
+	createAt: number;
+	role?: 'user' | 'admin';
+}
+
 export interface RegisterResponse {
 	message: string;
 	success: boolean;
@@ -45,7 +55,18 @@ export const registerApi = createApi({
 				body: data,
 			}),
 		}),
+		getUser: builder.query<{ success: string; user: User }, void>({
+			query: () => ({
+				url: '/api/v1/user/me',
+				method: 'GET',
+				credentials: 'include',
+			}),
+		}),
 	}),
 });
 
-export const { useRegisterUserMutation, useLogInUserMutation } = registerApi;
+export const {
+	useRegisterUserMutation,
+	useLogInUserMutation,
+	useGetUserQuery,
+} = registerApi;

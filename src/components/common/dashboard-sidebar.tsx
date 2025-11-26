@@ -2,6 +2,7 @@
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupContent,
 	SidebarHeader,
@@ -12,10 +13,22 @@ import {
 import { ChartAreaIcon, Package, Package2Icon } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { Avatar, AvatarImage } from '../ui/avatar';
+import { useGetUserQuery } from '@/modules/register/api/register-slice';
+import { toast } from 'sonner';
+import { Skeleton } from '../ui/skeleton';
 
 export const DashboardSidebar = () => {
+	const route = useRouter();
+	const { data, isLoading, error } = useGetUserQuery();
 	const pathName = usePathname();
+
+	if (error?.data?.success === false) {
+		toast.error(error?.data?.message);
+		route.push('/login');
+	}
+
 	const routes = [
 		{
 			icon: Package,
@@ -65,6 +78,21 @@ export const DashboardSidebar = () => {
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
+
+			<SidebarFooter>
+				<div className="flex items-center justify-center gap-2">
+					<Avatar>
+						<AvatarImage src="/profile.jpg" />
+					</Avatar>
+
+					<div>
+						<h6 className="text-sm font-semibold font-manrope">
+							{data?.user.fullName}
+						</h6>
+						<p className="text-[12px] font-manrope">{data?.user.email}</p>
+					</div>
+				</div>
+			</SidebarFooter>
 		</Sidebar>
 	);
 };

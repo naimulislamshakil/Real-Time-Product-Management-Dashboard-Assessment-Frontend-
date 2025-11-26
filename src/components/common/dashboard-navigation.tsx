@@ -3,6 +3,7 @@ import {
 	BellIcon,
 	ChevronDown,
 	HomeIcon,
+	LogOutIcon,
 	Menu,
 	MessageCircle,
 	Moon,
@@ -34,11 +35,13 @@ import {
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import { SidebarTrigger } from '../ui/sidebar';
+import { useGetUserQuery } from '@/modules/register/api/register-slice';
 
 export const DashboardNavigation = () => {
-	const pathName = usePathname();
+	const route = useRouter();
+	const { data, isLoading, error } = useGetUserQuery();
 	const { theme, setTheme } = useTheme();
-	const router = useRouter();
+
 	return (
 		<div>
 			<nav className="w-full bg-background border-b">
@@ -79,17 +82,25 @@ export const DashboardNavigation = () => {
 								<DropdownMenuLabel>My Profile</DropdownMenuLabel>
 								<Separator />
 
-								<DropdownMenuItem>
-									<Link href="/login" className="w-full">
-										Login
-									</Link>
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<Link href="/register" className="w-full">
-										Register
-									</Link>
-								</DropdownMenuItem>
-								<DropdownMenuItem></DropdownMenuItem>
+								{data?.success === true ? (
+									<DropdownMenuItem className="hover:text-red-500 text-red-500 font-manrope text-sm">
+										<LogOutIcon className="text-red-500" />
+										<span>Logout</span>
+									</DropdownMenuItem>
+								) : (
+									<>
+										<DropdownMenuItem>
+											<Link href="/login" className="w-full">
+												Login
+											</Link>
+										</DropdownMenuItem>
+										<DropdownMenuItem>
+											<Link href="/register" className="w-full">
+												Register
+											</Link>
+										</DropdownMenuItem>
+									</>
+								)}
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
