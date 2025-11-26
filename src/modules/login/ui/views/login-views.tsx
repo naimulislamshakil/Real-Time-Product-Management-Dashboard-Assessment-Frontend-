@@ -1,3 +1,9 @@
+import { Navigation } from '@/components/common/navigation';
+
 export const LoginViews = () => {
-	return <div>vcvbascv</div>;
+	return (
+		<div>
+			<Navigation />
+		</div>
+	);
 };
