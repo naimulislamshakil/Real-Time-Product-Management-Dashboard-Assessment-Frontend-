@@ -80,7 +80,7 @@ export const DashboardSidebar = () => {
 			</SidebarContent>
 
 			<SidebarFooter>
-				<div className="flex items-center justify-center gap-2">
+				<div className="flex items-center justify-center gap-2 bg-secondary p-3 rounded">
 					<Avatar>
 						<AvatarImage src="/profile.jpg" />
 					</Avatar>

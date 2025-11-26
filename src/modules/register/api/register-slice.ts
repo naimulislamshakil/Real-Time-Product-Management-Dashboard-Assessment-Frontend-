@@ -55,9 +55,16 @@ export const registerApi = createApi({
 				body: data,
 			}),
 		}),
-		getUser: builder.query<{ success: string; user: User }, void>({
+		getUser: builder.query<{ success: boolean; user: User }, void>({
 			query: () => ({
 				url: '/api/v1/user/me',
+				method: 'GET',
+				credentials: 'include',
+			}),
+		}),
+		logoutUser: builder.mutation<{ success: boolean; message: string }, void>({
+			query: () => ({
+				url: '/api/v1/user/logout',
 				method: 'GET',
 				credentials: 'include',
 			}),
@@ -69,4 +76,5 @@ export const {
 	useRegisterUserMutation,
 	useLogInUserMutation,
 	useGetUserQuery,
+	useLogoutUserMutation,
 } = registerApi;

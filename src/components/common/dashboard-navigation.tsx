@@ -15,7 +15,7 @@ import {
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -35,12 +35,25 @@ import {
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import { SidebarTrigger } from '../ui/sidebar';
-import { useGetUserQuery } from '@/modules/register/api/register-slice';
+import {
+	useGetUserQuery,
+	useLogoutUserMutation,
+} from '@/modules/register/api/register-slice';
 
 export const DashboardNavigation = () => {
 	const route = useRouter();
-	const { data, isLoading, error } = useGetUserQuery();
+	const { data } = useGetUserQuery();
+	const [logoutUser, { isLoading, isError, isSuccess, error }] =
+		useLogoutUserMutation();
 	const { theme, setTheme } = useTheme();
+
+	console.log({ isLoading, isError, isSuccess, error });
+
+	useEffect(() => {
+		if (isSuccess) {
+			route.push('/login');
+		}
+	}, [isSuccess, route]);
 
 	return (
 		<div>
@@ -83,7 +96,10 @@ export const DashboardNavigation = () => {
 								<Separator />
 
 								{data?.success === true ? (
-									<DropdownMenuItem className="hover:text-red-500 text-red-500 font-manrope text-sm">
+									<DropdownMenuItem
+										onClick={() => logoutUser()}
+										className="hover:text-red-500 text-red-500 font-manrope text-sm"
+									>
 										<LogOutIcon className="text-red-500" />
 										<span>Logout</span>
 									</DropdownMenuItem>
