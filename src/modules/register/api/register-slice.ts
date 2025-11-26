@@ -1,20 +1,32 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const registerSlice = createApi({
-	reducerPath: 'api',
-	baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/' }),
+export interface RegisterRequest {
+	fullName: string;
+	email: string;
+	password: string;
+	phone: string;
+}
+
+export interface RegisterResponse {
+	message: string;
+	success: boolean;
+}
+
+export const registerApi = createApi({
+	reducerPath: 'registerApi',
+	baseQuery: fetchBaseQuery({
+		baseUrl: 'http://localhost:5000',
+	}),
 	endpoints: (builder) => ({
-		registerUser: builder.mutation<
-			{ message: string },
-			{ fullName: string; email: string; password: string }
-		>({
+		registerUser: builder.mutation<RegisterResponse, RegisterRequest>({
 			query: (userData) => ({
-				url: '/register',
+				url: '/api/v1/user/register',
 				method: 'POST',
+				credentials: 'include',
 				body: userData,
 			}),
 		}),
 	}),
 });
 
-export const { useRegisterUserMutation } = registerSlice;
+export const { useRegisterUserMutation } = registerApi;

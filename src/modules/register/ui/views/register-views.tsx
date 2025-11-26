@@ -29,7 +29,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '../../schema/register-schema';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRegisterUserMutation } from '../../api/register-slice';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -51,14 +51,17 @@ export const RegisterViews = () => {
 
 	console.log({ isLoading, isError, isSuccess, error });
 
-	if (isSuccess) {
-		toast.success('User create successfully');
-		router.push('/login');
-	}
+	useEffect(() => {
+		if (isSuccess) {
+			toast.success('User created successfully');
+			router.push('/login');
+		}
 
-	if (isError) {
-		toast.error(error?.data?.message);
-	}
+		if (isError) {
+			toast.error('Register failed');
+		}
+	}, [isSuccess, isError, router]);
+
 	const {
 		handleSubmit,
 		register,
@@ -79,6 +82,7 @@ export const RegisterViews = () => {
 			email: data.email,
 			fullName: data.fullName,
 			password: data.password,
+			phone: data.phone,
 		};
 		const res = await registerUser(user).unwrap();
 		console.log(res);

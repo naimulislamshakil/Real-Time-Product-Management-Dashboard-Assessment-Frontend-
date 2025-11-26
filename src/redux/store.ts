@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { registerSlice } from '@/modules/register/api/register-slice';
+import { registerApi } from '@/modules/register/api/register-slice';
 
 export const store = configureStore({
 	reducer: {
-		[registerSlice.reducerPath]: registerSlice.reducer,
+		[registerApi.reducerPath]: registerApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat(registerSlice.middleware),
+		getDefaultMiddleware().concat(registerApi.middleware),
 });
 
+// Types for TS
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
