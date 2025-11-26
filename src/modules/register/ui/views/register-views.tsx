@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/input-group';
 import { Label } from '@/components/ui/label';
 import {
-    Eye,
-    EyeClosed,
+	Eye,
+	EyeClosed,
 	FacebookIcon,
 	InstagramIcon,
 	LockIcon,
@@ -30,6 +30,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '../../schema/register-schema';
 import { useState } from 'react';
+import { useRegisterUserMutation } from '../../api/register-slice';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface Data {
 	fullName: string;
@@ -40,8 +43,22 @@ interface Data {
 }
 
 export const RegisterViews = () => {
+	const router = useRouter();
 	const [passwordType, setPasswordType] = useState(false);
 	const [confirmPasswordType, setConfirmPasswordType] = useState(false);
+	const [registerUser, { isLoading, isError, isSuccess, error }] =
+		useRegisterUserMutation();
+
+	console.log({ isLoading, isError, isSuccess, error });
+
+	if (isSuccess) {
+		toast.success('User create successfully');
+		router.push('/login');
+	}
+
+	if (isError) {
+		toast.error(error?.data?.message);
+	}
 	const {
 		handleSubmit,
 		register,
@@ -57,8 +74,14 @@ export const RegisterViews = () => {
 		resolver: yupResolver(registerSchema),
 	});
 
-	const onSubmit = (data: Data) => {
-		console.log(data);
+	const onSubmit = async (data: Data) => {
+		const user = {
+			email: data.email,
+			fullName: data.fullName,
+			password: data.password,
+		};
+		const res = await registerUser(user).unwrap();
+		console.log(res);
 	};
 
 	return (
@@ -140,6 +163,7 @@ export const RegisterViews = () => {
 								<Label className="mb-2">Password</Label>
 								<InputGroup className="py-5">
 									<InputGroupInput
+										{...register('password')}
 										type={passwordType === false ? 'password' : 'text'}
 										placeholder="************"
 									/>
@@ -166,7 +190,6 @@ export const RegisterViews = () => {
 									<InputGroupInput
 										type={confirmPasswordType === false ? 'password' : 'text'}
 										{...register('confirmPassword')}
-										
 										placeholder="************"
 									/>
 									<InputGroupAddon>
