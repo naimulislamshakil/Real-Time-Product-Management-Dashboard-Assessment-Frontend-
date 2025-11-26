@@ -49,19 +49,6 @@ export const RegisterViews = () => {
 	const [registerUser, { isLoading, isError, isSuccess, error }] =
 		useRegisterUserMutation();
 
-	console.log({ isLoading, isError, isSuccess, error });
-
-	useEffect(() => {
-		if (isSuccess) {
-			toast.success('User created successfully');
-			router.push('/login');
-		}
-
-		if (isError) {
-			toast.error('Register failed');
-		}
-	}, [isSuccess, isError, router]);
-
 	const {
 		handleSubmit,
 		register,
@@ -76,6 +63,18 @@ export const RegisterViews = () => {
 		},
 		resolver: yupResolver(registerSchema),
 	});
+
+	useEffect(() => {
+		if (isSuccess) {
+			reset();
+			toast.success('User created successfully');
+			router.push('/login');
+		}
+
+		if (isError) {
+			toast.error('Register failed');
+		}
+	}, [isSuccess, isError, router,reset]);
 
 	const onSubmit = async (data: Data) => {
 		const user = {

@@ -24,10 +24,13 @@ import {
 	TwitterIcon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../../schema/login-schema';
+import { useLogInUserMutation } from '@/modules/register/api/register-slice';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface Data {
 	email: string;
@@ -35,7 +38,15 @@ interface Data {
 }
 
 export const LoginViews = () => {
+	const route = useRouter();
 	const [passwordType, setPasswordType] = useState(false);
+	const [logInUser, { isSuccess, isLoading, isError }] = useLogInUserMutation();
+
+	useEffect(() => {
+		const token = Cookies.get('token');
+		console.log(token);
+	}, [isSuccess]);
+
 	const {
 		handleSubmit,
 		reset,
@@ -49,8 +60,11 @@ export const LoginViews = () => {
 		resolver: yupResolver(loginSchema),
 	});
 
-	const onSubmit = (data: Data) => {
-		console.log(data);
+	const onSubmit = async (data: Data) => {
+		const res = await logInUser(data).unwrap();
+		if (isSuccess) {
+			route.push('/');
+		}
 	};
 	return (
 		<div>
