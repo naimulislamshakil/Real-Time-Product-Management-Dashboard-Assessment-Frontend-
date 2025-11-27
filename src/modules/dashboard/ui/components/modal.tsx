@@ -29,11 +29,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { addProductSchema } from '../../schema/add-product-schema';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAddProductMutation } from '../../api/product-slice';
 
 interface Props {
 	isOpen: boolean;
+	setOpen: (value: boolean) => void;
 	onClose: () => void;
 }
 
@@ -47,7 +48,9 @@ interface Data {
 	image: string;
 }
 
-export default function Modal({ isOpen, onClose }: Props) {
+export default function Modal({ isOpen, setOpen, onClose }: Props)
+{
+	
 	const [addProduct, { isError, isLoading, isSuccess, error, data }] =
 		useAddProductMutation();
 
@@ -59,10 +62,6 @@ export default function Modal({ isOpen, onClose }: Props) {
 			toast.error(error?.data?.message);
 		}
 	}, [error, data, isError, isLoading, isSuccess]);
-
-	if (isLoading) {
-		return <p>Loading.....</p>;
-	}
 
 	const {
 		register,
@@ -100,8 +99,9 @@ export default function Modal({ isOpen, onClose }: Props) {
 	const onSubmit = async (input: Data) => {
 		await addProduct(input).unwrap();
 		reset();
-		onClose();
+		setOpen(false);
 	};
+	 if (!isOpen) return null;
 
 	return (
 		<div

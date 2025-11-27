@@ -3,11 +3,13 @@ import { Button } from '@/components/ui/button';
 import Modal from '../components/modal';
 import { useState } from 'react';
 import { PlusCircleIcon } from 'lucide-react';
-
-
+import { useGetAllProductsQuery } from '../../api/product-slice';
 
 export const ProductViews = () => {
 	const [open, setOpen] = useState(false);
+	const { data, error } = useGetAllProductsQuery();
+
+	console.log(data,error);
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-between w-full">
@@ -22,7 +24,11 @@ export const ProductViews = () => {
 						Add New Product
 					</Button>
 
-					<Modal isOpen={open} onClose={() => setOpen(false)}></Modal>
+					<Modal
+						isOpen={open}
+						setOpen={setOpen}
+						onClose={() => setOpen(false)}
+					></Modal>
 				</div>
 			</div>
 		</div>
