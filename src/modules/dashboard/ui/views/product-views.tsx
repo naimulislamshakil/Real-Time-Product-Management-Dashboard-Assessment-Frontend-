@@ -1,19 +1,41 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import Modal from '../components/modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PlusCircleIcon } from 'lucide-react';
-import { useGetAllProductsQuery } from '../../api/product-slice';
+import {
+	useDeleteProductMutation,
+	useGetAllProductsQuery,
+} from '../../api/product-slice';
 import { DataTable } from '../components/data-table';
 import { columns } from '../components/columns';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export const ProductViews = () => {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const { data, error } = useGetAllProductsQuery();
+	const { data, error, refetch } = useGetAllProductsQuery();
+	const [
+		deleteProduct,
+		{ isError, isLoading, isSuccess, error: deleteError, data: deleteData },
+	] = useDeleteProductMutation();
 
-	console.log(data, error);
+	console.log({ isError, isLoading, isSuccess, deleteError, deleteData });
+
+	useEffect(() => {
+		if (isSuccess) {
+			toast.success(deleteData?.message);
+		}
+		if (error) {
+			toast.error(error?.data?.message);
+		}
+	}, [error, deleteData, isError, isLoading, isSuccess]);
+
+	const handleDelete = async (productId: any) => {
+		await deleteProduct(productId).unwrap();
+		refetch();
+	};
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-between w-full">
@@ -36,7 +58,7 @@ export const ProductViews = () => {
 				</div>
 			</div>
 
-			<DataTable columns={columns} data={data?.products} />
+			<DataTable columns={columns(handleDelete)} data={data?.products} />
 		</div>
 	);
 };

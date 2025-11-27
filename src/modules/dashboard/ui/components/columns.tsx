@@ -1,7 +1,8 @@
+'use client';
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit2Icon, EllipsisVerticalIcon, TrashIcon } from 'lucide-react';
 import Image from 'next/image';
-import { Product } from '../../api/product-slice';
+import { Product, useDeleteProductMutation } from '../../api/product-slice';
 import { productStatus } from '../../array/category';
 import {
 	DropdownMenu,
@@ -26,7 +27,9 @@ const statusColors: Record<string, string> = {
 	discontinued: 'bg-red-200 text-red-900',
 };
 
-export const columns: ColumnDef<Product>[] = [
+export const columns = (
+	handleDelete: (id: string) => void
+): ColumnDef<Product>[] => [
 	{
 		accessorKey: 'image',
 		header: 'Image',
@@ -117,9 +120,6 @@ export const columns: ColumnDef<Product>[] = [
 		cell: ({ row }) => {
 			const productId = row.original.id;
 
-			const handleDelete = () => {
-				console.log('Delete product with id:', productId);
-			};
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger>
@@ -137,7 +137,7 @@ export const columns: ColumnDef<Product>[] = [
 						</Link>
 
 						<DropdownMenuItem
-							onClick={() => handleDelete()}
+							onClick={()=>handleDelete(productId)}
 							className="text-red-500"
 						>
 							<TrashIcon className="text-red-500 hover:text-red-500" />
