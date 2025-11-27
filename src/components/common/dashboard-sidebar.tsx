@@ -53,7 +53,7 @@ export const DashboardSidebar = () => {
 			</SidebarHeader>
 			<Separator className="mt-1" />
 
-			<SidebarContent>
+			<SidebarContent className="mt-4">
 				<SidebarGroup>
 					<SidebarGroupContent>
 						<SidebarMenu>

@@ -74,7 +74,7 @@ export const RegisterViews = () => {
 		if (isError) {
 			toast.error('Register failed');
 		}
-	}, [isSuccess, isError, router,reset]);
+	}, [isSuccess, isError, router, reset]);
 
 	const onSubmit = async (data: Data) => {
 		const user = {
@@ -83,8 +83,7 @@ export const RegisterViews = () => {
 			password: data.password,
 			phone: data.phone,
 		};
-		const res = await registerUser(user).unwrap();
-		console.log(res);
+		await registerUser(user).unwrap();
 	};
 
 	return (

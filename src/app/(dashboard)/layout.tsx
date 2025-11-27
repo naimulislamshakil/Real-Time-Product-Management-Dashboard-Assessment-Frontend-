@@ -14,7 +14,7 @@ const Layout = ({ children }: Props) => {
 				<DashboardSidebar />
 				<main className="flex-1">
 					<DashboardNavigation />
-					<div className="p-4">{children}</div>
+					<div className="p-5">{children}</div>
 				</main>
 			</SidebarProvider>
 		</div>

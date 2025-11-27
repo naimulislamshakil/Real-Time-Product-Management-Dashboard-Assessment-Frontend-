@@ -1,21 +1,9 @@
 'use client';
-import {
-	BellIcon,
-	ChevronDown,
-	HomeIcon,
-	LogOutIcon,
-	Menu,
-	MessageCircle,
-	Moon,
-	SearchIcon,
-	Sun,
-	UsersIcon,
-	X,
-} from 'lucide-react';
+import { ChevronDown, LogOutIcon, Moon, SearchIcon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -46,8 +34,6 @@ export const DashboardNavigation = () => {
 	const [logoutUser, { isLoading, isError, isSuccess, error }] =
 		useLogoutUserMutation();
 	const { theme, setTheme } = useTheme();
-
-	console.log({ isLoading, isError, isSuccess, error });
 
 	useEffect(() => {
 		if (isSuccess) {
