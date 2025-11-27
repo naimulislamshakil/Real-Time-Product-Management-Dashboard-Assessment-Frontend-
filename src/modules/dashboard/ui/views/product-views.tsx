@@ -4,12 +4,16 @@ import Modal from '../components/modal';
 import { useState } from 'react';
 import { PlusCircleIcon } from 'lucide-react';
 import { useGetAllProductsQuery } from '../../api/product-slice';
+import { DataTable } from '../components/data-table';
+import { columns } from '../components/columns';
+import { useRouter } from 'next/navigation';
 
 export const ProductViews = () => {
+	const router = useRouter();
 	const [open, setOpen] = useState(false);
 	const { data, error } = useGetAllProductsQuery();
 
-	console.log(data,error);
+	console.log(data, error);
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-between w-full">
@@ -31,6 +35,8 @@ export const ProductViews = () => {
 					></Modal>
 				</div>
 			</div>
+
+			<DataTable columns={columns} data={data?.products} />
 		</div>
 	);
 };

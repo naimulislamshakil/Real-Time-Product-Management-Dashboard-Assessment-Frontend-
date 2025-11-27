@@ -15,7 +15,7 @@ interface AddProductRequest {
 	image: string;
 }
 
-interface Product {
+export interface Product {
 	id: string;
 	sku: string;
 	createAt: any;
