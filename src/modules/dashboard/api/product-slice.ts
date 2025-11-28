@@ -11,7 +11,7 @@ interface AddProductRequest {
 	stock: number;
 	category: string;
 	status: string;
-	description: string;
+	description?: string | undefined;
 	image: string;
 }
 

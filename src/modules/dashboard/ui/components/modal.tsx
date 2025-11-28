@@ -50,7 +50,7 @@ interface Data {
 	category: string;
 	status: string;
 	stock: number;
-	description: string;
+	description?: string | undefined;
 	image: string;
 }
 
@@ -70,7 +70,6 @@ export default function Modal({
 		if (isSuccess) {
 			toast.success(data?.message);
 		}
-		
 	}, [error, data, isError, isLoading, isSuccess]);
 
 	const {
