@@ -10,7 +10,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
 
 const statusColors: Record<string, string> = {
 	in_stock: 'bg-green-100 text-green-800',
