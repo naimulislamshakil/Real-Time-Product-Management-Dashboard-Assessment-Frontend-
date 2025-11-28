@@ -55,7 +55,11 @@ export const registerApi = createApi({
 				body: data,
 			}),
 		}),
-		getUser: builder.query<{ success: boolean; user: User }, void>({
+		getUser: builder.query<
+			{ success: boolean; user: User },
+			void,
+			{ error: { message: string; status?: number } }
+		>({
 			query: () => ({
 				url: '/api/v1/user/me',
 				method: 'GET',

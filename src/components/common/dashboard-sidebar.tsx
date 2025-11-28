@@ -24,8 +24,9 @@ export const DashboardSidebar = () => {
 	const { data, isLoading, error } = useGetUserQuery();
 	const pathName = usePathname();
 
-	if (error?.data?.success === false) {
-		toast.error(error?.data?.message);
+	console.log(error);
+
+	if (error) {
 		route.push('/login');
 	}
 

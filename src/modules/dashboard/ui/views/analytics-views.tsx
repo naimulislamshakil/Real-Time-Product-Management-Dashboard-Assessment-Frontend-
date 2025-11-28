@@ -1,5 +1,6 @@
 import { ProductAddedOverTime } from '../components/chart1';
 import { CategoryDistribution } from '../components/chart2';
+import { StockValue } from '../components/chart3';
 
 export const AnalyticsViews = () => {
 	return (
@@ -8,6 +9,8 @@ export const AnalyticsViews = () => {
 				<ProductAddedOverTime />
 				<CategoryDistribution />
 			</div>
+
+			<StockValue/>
 		</div>
 	);
 };
