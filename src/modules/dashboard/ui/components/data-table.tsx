@@ -18,7 +18,7 @@ import { Product } from '../../api/product-slice';
 
 interface DataTableProps {
 	columns: ColumnDef<Product>[];
-	data: Product[];
+	data: Product[]|undefined;
 	onRowClick?: (row: Product) => void;
 }
 

@@ -79,7 +79,7 @@ export const productApi = createApi({
 			invalidatesTags: ['Products'],
 		}),
 		getSingleProductById: builder.query({
-			query: (id: string) => ({
+			query: (id: string|null) => ({
 				url: `/api/v1/product/getProductById/${id}`,
 				method: 'GET',
 				credentials: 'include',

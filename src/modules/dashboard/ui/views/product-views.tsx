@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 export const ProductViews = () => {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const [modalProductId, setModalProductId] = useState<string | null>('');
+	const [modalProductId, setModalProductId] = useState<string>('');
 	const { data, error, refetch } = useGetAllProductsQuery();
 	const [
 		deleteProduct,
@@ -28,21 +28,16 @@ export const ProductViews = () => {
 		if (isSuccess) {
 			toast.success(deleteData?.message);
 		}
-		if (error) {
-			toast.error(error?.data?.message);
-		}
 	}, [error, deleteData, isError, isLoading, isSuccess]);
 
-	const handleDelete = async (productId: any) => {
+	const handleDelete = async (productId: string) => {
 		await deleteProduct(productId).unwrap();
 		refetch();
 	};
 
-	const handleEdit = (id: any) => {
+	const handleEdit = (id: string) => {
 		setModalProductId(id); // start fetch
 	};
-
-	console.log(productData);
 
 	useEffect(() => {
 		if (productData?.success) {
