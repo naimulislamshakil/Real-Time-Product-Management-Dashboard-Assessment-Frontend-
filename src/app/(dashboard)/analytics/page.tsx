@@ -1,7 +1,8 @@
+import { AnalyticsViews } from '@/modules/dashboard/ui/views/analytics-views';
 import React from 'react';
 
 const Page = () => {
-	return <div>Page</div>;
+	return <AnalyticsViews />;
 };
 
 export default Page;

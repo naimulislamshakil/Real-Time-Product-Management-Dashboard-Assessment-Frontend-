@@ -98,6 +98,63 @@ export const productApi = createApi({
 				{ type: 'Products', id: 'LIST' },
 			],
 		}),
+
+		getChart1: builder.query<
+			{
+				success: boolean;
+				chartData: [
+					{
+						day: string;
+						total: number;
+					}
+				];
+			},
+			void
+		>({
+			query: () => ({
+				url: '/api/v1/product/chart1',
+				method: 'GET',
+				credentials: 'include',
+			}),
+		}),
+
+		getChart2: builder.query<
+			{
+				success: boolean;
+				chartData: [
+					{
+						category: string;
+						count: number;
+					}
+				];
+			},
+			void
+		>({
+			query: () => ({
+				url: '/api/v1/product/chart2',
+				method: 'GET',
+				credentials: 'include',
+			}),
+		}),
+
+		getChart3: builder.query<
+			{
+				success: boolean;
+				chartData: [
+					{
+						productName: string;
+						stockValue: number;
+					}
+				];
+			},
+			void
+		>({
+			query: () => ({
+				url: '/api/v1/product/chart3',
+				method: 'GET',
+				credentials: 'include',
+			}),
+		}),
 	}),
 });
 
@@ -107,4 +164,7 @@ export const {
 	useDeleteProductMutation,
 	useGetSingleProductByIdQuery,
 	useEditProductMutation,
+	useGetChart1Query,
+	useGetChart2Query,
+	useGetChart3Query,
 } = productApi;
