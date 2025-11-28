@@ -6,6 +6,7 @@ import { PlusCircleIcon } from 'lucide-react';
 import {
 	useDeleteProductMutation,
 	useGetAllProductsQuery,
+	useGetSingleProductByIdQuery,
 } from '../../api/product-slice';
 import { DataTable } from '../components/data-table';
 import { columns } from '../components/columns';
@@ -15,13 +16,13 @@ import { toast } from 'sonner';
 export const ProductViews = () => {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
+	const [modalProductId, setModalProductId] = useState<string | null>('');
 	const { data, error, refetch } = useGetAllProductsQuery();
 	const [
 		deleteProduct,
 		{ isError, isLoading, isSuccess, error: deleteError, data: deleteData },
 	] = useDeleteProductMutation();
-
-	console.log({ isError, isLoading, isSuccess, deleteError, deleteData });
+	const { data: productData } = useGetSingleProductByIdQuery(modalProductId);
 
 	useEffect(() => {
 		if (isSuccess) {
@@ -36,6 +37,19 @@ export const ProductViews = () => {
 		await deleteProduct(productId).unwrap();
 		refetch();
 	};
+
+	const handleEdit = (id: any) => {
+		setModalProductId(id); // start fetch
+	};
+
+	console.log(productData);
+
+	useEffect(() => {
+		if (productData?.success) {
+			setOpen(true);
+		}
+	}, [productData]);
+
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-between w-full">
@@ -54,11 +68,16 @@ export const ProductViews = () => {
 						isOpen={open}
 						setOpen={setOpen}
 						onClose={() => setOpen(false)}
+						product={productData?.product}
+						id={modalProductId}
 					></Modal>
 				</div>
 			</div>
 
-			<DataTable columns={columns(handleDelete)} data={data?.products} />
+			<DataTable
+				columns={columns(handleDelete, handleEdit)}
+				data={data?.products}
+			/>
 		</div>
 	);
 };

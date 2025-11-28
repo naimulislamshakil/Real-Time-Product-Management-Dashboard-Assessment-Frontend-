@@ -2,7 +2,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit2Icon, EllipsisVerticalIcon, TrashIcon } from 'lucide-react';
 import Image from 'next/image';
-import { Product, useDeleteProductMutation } from '../../api/product-slice';
+import { Product } from '../../api/product-slice';
 import { productStatus } from '../../array/category';
 import {
 	DropdownMenu,
@@ -28,7 +28,8 @@ const statusColors: Record<string, string> = {
 };
 
 export const columns = (
-	handleDelete: (id: string) => void
+	handleDelete: (id: string) => void,
+	handleEdit: (id: string) => void
 ): ColumnDef<Product>[] => [
 	{
 		accessorKey: 'image',
@@ -127,17 +128,15 @@ export const columns = (
 					</DropdownMenuTrigger>
 
 					<DropdownMenuContent className="rounded">
-						<Link href="/">
-							<DropdownMenuItem>
-								<Edit2Icon />
-								<span className="text-sm font-manrope font-semibold">
-									Edit Product
-								</span>
-							</DropdownMenuItem>
-						</Link>
+						<DropdownMenuItem onClick={() => handleEdit(productId)}>
+							<Edit2Icon />
+							<span className="text-sm font-manrope font-semibold">
+								Edit Product
+							</span>
+						</DropdownMenuItem>
 
 						<DropdownMenuItem
-							onClick={()=>handleDelete(productId)}
+							onClick={() => handleDelete(productId)}
 							className="text-red-500"
 						>
 							<TrashIcon className="text-red-500 hover:text-red-500" />

@@ -30,12 +30,18 @@ import { addProductSchema } from '../../schema/add-product-schema';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
-import { useAddProductMutation } from '../../api/product-slice';
+import {
+	Product,
+	useAddProductMutation,
+	useEditProductMutation,
+} from '../../api/product-slice';
 
 interface Props {
 	isOpen: boolean;
 	setOpen: (value: boolean) => void;
 	onClose: () => void;
+	product: Product;
+	id: string;
 }
 
 interface Data {
@@ -48,11 +54,17 @@ interface Data {
 	image: string;
 }
 
-export default function Modal({ isOpen, setOpen, onClose }: Props)
-{
-	
+export default function Modal({
+	isOpen,
+	setOpen,
+	onClose,
+	product,
+	id,
+}: Props) {
 	const [addProduct, { isError, isLoading, isSuccess, error, data }] =
 		useAddProductMutation();
+	const [editProduct, { isSuccess: isEditSuccess, isError: isEditError }] =
+		useEditProductMutation();
 
 	useEffect(() => {
 		if (isSuccess) {
@@ -67,12 +79,27 @@ export default function Modal({ isOpen, setOpen, onClose }: Props)
 		register,
 		handleSubmit,
 		control,
+		watch,
 		setValue,
 		reset,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(addProductSchema),
 	});
+
+	useEffect(() => {
+		if (!product) return; // only run when product actually arrives
+
+		reset({
+			productName: product.productName ?? '',
+			price: product.price ?? '',
+			category: product.category ?? '',
+			status: product.status ?? '',
+			stock: product.stock ?? '',
+			description: product.description ?? '',
+			image: product.image ?? '',
+		});
+	}, [product]);
 
 	const uploadImage = async (e: any) => {
 		const img = e.target.files?.[0];
@@ -97,11 +124,23 @@ export default function Modal({ isOpen, setOpen, onClose }: Props)
 	};
 
 	const onSubmit = async (input: Data) => {
-		await addProduct(input).unwrap();
-		reset();
-		setOpen(false);
+		try {
+			if (product) {
+				await editProduct({ id, data: input }).unwrap();
+				toast.success('Product update successfully!');
+				reset();
+				setOpen(false);
+			} else {
+				await addProduct(input).unwrap();
+				toast.success('Product added successfully!');
+				reset();
+				setOpen(false);
+			}
+		} catch (err: any) {
+			toast.error(err.data?.message || 'Something went wrong!');
+		}
 	};
-	 if (!isOpen) return null;
+	if (!isOpen) return null;
 
 	return (
 		<div
@@ -113,8 +152,14 @@ export default function Modal({ isOpen, setOpen, onClose }: Props)
 				onClick={(e) => e.stopPropagation()}
 			>
 				<CardHeader>
-					<CardTitle>Add New Product</CardTitle>
-					<CardDescription>You can add your product here.</CardDescription>
+					<CardTitle className="text-2xl font-semibold font-manrope">
+						{product ? 'Edit Product' : 'Add New Product'}
+					</CardTitle>
+					<CardDescription className="text-sm font-manrope">
+						{product
+							? 'You can edit your product here.'
+							: 'You can add your product here.'}
+					</CardDescription>
 					<Separator className="mt-2" />
 				</CardHeader>
 
@@ -161,7 +206,7 @@ export default function Modal({ isOpen, setOpen, onClose }: Props)
 									control={control}
 									render={({ field }) => (
 										<Select
-											defaultValue={field.value || ''}
+											value={field.value || ''}
 											onValueChange={field.onChange}
 										>
 											<SelectTrigger className="w-full rounded">
@@ -197,8 +242,8 @@ export default function Modal({ isOpen, setOpen, onClose }: Props)
 									control={control}
 									render={({ field }) => (
 										<Select
-											defaultValue={field.value || ''}
-											onValueChange={(val) => field.onChange(val)}
+											value={field.value || ''}
+											onValueChange={field.onChange}
 										>
 											<SelectTrigger className="w-full rounded">
 												<SelectValue placeholder="Select a status" />
@@ -260,7 +305,7 @@ export default function Modal({ isOpen, setOpen, onClose }: Props)
 								type="submit"
 								className="rounded mt-5 bg-blue-500 hover:bg-blue-600 text-white"
 							>
-								Add Product
+								{product ? 'Edit Product' : 'Add Product'}
 							</Button>
 						</div>
 					</form>

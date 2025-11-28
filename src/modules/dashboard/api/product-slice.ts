@@ -29,6 +29,11 @@ export interface Product {
 	image: string;
 }
 
+interface EditProductArgs {
+	id: string;
+	data: AddProductRequest;
+}
+
 export const productApi = createApi({
 	reducerPath: 'productApi',
 	baseQuery: fetchBaseQuery({
@@ -45,7 +50,7 @@ export const productApi = createApi({
 			}),
 		}),
 		getAllProducts: builder.query<
-			{ success: boolean; message: string; products: Product },
+			{ success: boolean; message: string; products: Product[] },
 			void
 		>({
 			query: () => ({
@@ -53,6 +58,16 @@ export const productApi = createApi({
 				method: 'GET',
 				credentials: 'include',
 			}),
+			providesTags: (result) =>
+				result
+					? [
+							...result.products.map(({ id }) => ({
+								type: 'Products' as const,
+								id,
+							})),
+							{ type: 'Products', id: 'LIST' },
+					  ]
+					: [{ type: 'Products', id: 'LIST' }],
 		}),
 
 		deleteProduct: builder.mutation({
@@ -63,6 +78,26 @@ export const productApi = createApi({
 			}),
 			invalidatesTags: ['Products'],
 		}),
+		getSingleProductById: builder.query({
+			query: (id: string) => ({
+				url: `/api/v1/product/getProductById/${id}`,
+				method: 'GET',
+				credentials: 'include',
+			}),
+		}),
+
+		editProduct: builder.mutation<AddProductResponse, EditProductArgs>({
+			query: ({ id, data }: { id: string; data: AddProductRequest }) => ({
+				url: `/api/v1/product/editProduct/${id}`,
+				method: 'PUT',
+				credentials: 'include',
+				body: data,
+			}),
+			invalidatesTags: (result, error, { id }) => [
+				{ type: 'Products', id },
+				{ type: 'Products', id: 'LIST' },
+			],
+		}),
 	}),
 });
 
@@ -70,4 +105,6 @@ export const {
 	useAddProductMutation,
 	useGetAllProductsQuery,
 	useDeleteProductMutation,
+	useGetSingleProductByIdQuery,
+	useEditProductMutation,
 } = productApi;
