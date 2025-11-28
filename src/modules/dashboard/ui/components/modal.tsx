@@ -70,9 +70,7 @@ export default function Modal({
 		if (isSuccess) {
 			toast.success(data?.message);
 		}
-		if (error) {
-			toast.error(error?.data?.message);
-		}
+		
 	}, [error, data, isError, isLoading, isSuccess]);
 
 	const {
