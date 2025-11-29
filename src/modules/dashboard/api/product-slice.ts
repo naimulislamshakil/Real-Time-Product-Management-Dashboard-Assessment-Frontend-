@@ -37,7 +37,7 @@ interface EditProductArgs {
 export const productApi = createApi({
 	reducerPath: 'productApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'https://assesment-backend-0ype.onrender.com',
+		baseUrl: 'https://assesment-backend-plum.vercel.app',
 	}),
 	tagTypes: ['Products'],
 	endpoints: (builder) => ({

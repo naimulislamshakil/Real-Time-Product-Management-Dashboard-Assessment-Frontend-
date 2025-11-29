@@ -36,7 +36,7 @@ export interface LoginResponse {
 export const registerApi = createApi({
 	reducerPath: 'registerApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'https://assesment-backend-0ype.onrender.com',
+		baseUrl: 'https://assesment-backend-plum.vercel.app',
 	}),
 	endpoints: (builder) => ({
 		registerUser: builder.mutation<RegisterResponse, RegisterRequest>({
