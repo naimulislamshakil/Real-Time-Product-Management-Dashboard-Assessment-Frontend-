@@ -37,7 +37,7 @@ interface EditProductArgs {
 export const productApi = createApi({
 	reducerPath: 'productApi',
 	baseQuery: fetchBaseQuery({
-		baseUrl: 'http://localhost:5000',
+		baseUrl: 'https://assesment-backend-0ype.onrender.com',
 	}),
 	tagTypes: ['Products'],
 	endpoints: (builder) => ({
@@ -79,7 +79,7 @@ export const productApi = createApi({
 			invalidatesTags: ['Products'],
 		}),
 		getSingleProductById: builder.query({
-			query: (id: string|null) => ({
+			query: (id: string | null) => ({
 				url: `/api/v1/product/getProductById/${id}`,
 				method: 'GET',
 				credentials: 'include',
